@@ -1,4 +1,4 @@
-<p>String parameters should have minimum length, maximum length, regular expression,format or enum restriction.</p>
+<p>String parameters should have minimum length, maximum length, regular expression or enum restriction.</p>
 <h2>Noncompliant Code Example (OpenAPI 2)</h2>
 <pre>
   swagger: '2.0'
@@ -88,4 +88,37 @@
                   type: array
                   items:
                     type: string
+</pre>
+<h2>Exempt formats</h2>
+<p>A string parameter is also compliant when its <code>format</code> is one whose value space is
+already fully constrained by the format itself: <code>date</code>, <code>date-time</code>,
+<code>uuid</code>, <code>ipv4</code> and <code>ipv6</code>.</p>
+<p>The list is fixed and case-insensitive. It is not affected by the <code>parameter_integrity</code>
+rule property: narrowing that list, or emptying it, does not make an exempt parameter report. The
+two mechanisms stack rather than replace one another, so adding <code>format</code> to
+<code>parameter_integrity</code> makes the mere presence of any format satisfy the rule, including
+formats that are not on this list.</p>
+<p>Every other format still requires one of the configured restrictions. That includes
+<code>email</code> and <code>hostname</code>, which only cap the maximum length rather than fixing
+the shape of the value, as well as <code>password</code>, <code>uri</code>, <code>byte</code>,
+<code>binary</code> and any custom format.</p>
+<h2>Compliant Solution (exempt format)</h2>
+<pre>
+  openapi: "3.0.0"
+  info:
+    version: 1.0.0
+    title: My API
+  paths:
+    /items/{itemId}:
+      get:
+        parameters:
+          - name: itemId
+            in: path
+            required: true
+            schema:
+              type: string
+              format: uuid
+        responses:
+          200:
+            description: An item
 </pre>

@@ -117,3 +117,36 @@
             400:
                 description: error
 </pre>
+<h2>Formatos exentos</h2>
+<p>Un parámetro de tipo string también cumple la regla cuando su <code>format</code> es uno cuyo
+espacio de valores ya queda acotado por el propio formato: <code>date</code>,
+<code>date-time</code>, <code>uuid</code>, <code>ipv4</code> e <code>ipv6</code>.</p>
+<p>La lista es fija y no distingue mayúsculas de minúsculas. No se ve afectada por la propiedad
+<code>parameter_integrity</code>: restringir esa lista, o vaciarla, no hace que un parámetro exento
+genere hallazgo. Los dos mecanismos se suman en lugar de sustituirse, así que añadir
+<code>format</code> a <code>parameter_integrity</code> hace que la mera presencia de cualquier
+formato satisfaga la regla, incluidos los formatos que no están en esta lista.</p>
+<p>Cualquier otro formato sigue exigiendo una de las restricciones configuradas. Eso incluye
+<code>email</code> y <code>hostname</code>, que solo acotan el maximo sin fijar la forma del valor,
+ademas de <code>password</code>, <code>uri</code>, <code>byte</code>, <code>binary</code> y
+cualquier formato personalizado.</p>
+<h2>Solución compatible (formato exento)</h2>
+<pre>
+  openapi: "3.0.0"
+  info:
+    version: 1.0.0
+    title: My API
+  paths:
+    /items/{itemId}:
+      get:
+        parameters:
+          - name: itemId
+            in: path
+            required: true
+            schema:
+              type: string
+              format: uuid
+        responses:
+          200:
+            description: Un item
+</pre>
