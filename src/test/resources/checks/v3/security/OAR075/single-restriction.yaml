@@ -26,11 +26,16 @@ paths:
           schema:
             type: string
             enum: ['admin', 'user']
-        - name: soloFormat
+        - name: formatoNoExento
           in: query
           schema:
             type: string  # Noncompliant {{OAR075: String parameters should have minLength, maxLength, pattern (regular expression), or enum restriction that are defined in the properties}}
-            format: date
+            format: password
+        - name: soloFormatoExento
+          in: query
+          schema:
+            type: string
+            format: uuid
       responses:
         '200':
           description: ok
